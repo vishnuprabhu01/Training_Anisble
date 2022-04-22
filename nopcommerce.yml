@@ -3,12 +3,30 @@
   hosts: all
   become: yes
   tasks:
-  - name: Download Microsoft key 
-    get_url:
-      url: https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-      dest: /tmp/packages-microsoft-prod.deb
-      mode: '755'
-  - name: Prevent python from being upgraded
-    dpkg_selections:
-      name: /tmp/packages-microsoft-prod.deb
-      selection: install
+    - name: Download Microsoft key 
+      get_url:
+        url: https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb 
+        dest: /tmp/packages-microsoft-prod.deb
+        mode: '755'
+    - name: deb need to install
+      ansible.builtin.apt:
+        deb: /tmp/packages-microsoft-prod.deb 
+    - name: .net core runtime
+      ansible.builtin.apt:
+        update_cache: yes
+        pkg:
+        - apt-transport-https
+        - aspnetcore-runtime-6.0  
+    - name: Install nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+    - name: Start service nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started 
+    - name: Configure reverse proxy
+      ansible.builtin.copy:
+        src: ./forward.conf
+        dest: /etc/nginx/sites-available/default
+             
