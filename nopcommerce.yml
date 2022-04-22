@@ -2,7 +2,6 @@
 - name: Installing NOPcommerce
   hosts: all
   become: yes
-
   tasks:
   - name: Download Microsoft key 
     get_url:
