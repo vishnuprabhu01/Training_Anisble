@@ -29,4 +29,10 @@
       ansible.builtin.copy:
         src: ./forward.conf
         dest: /etc/nginx/sites-available/default
-             
+      notify:
+      - Restart nginx
+  handlers:
+  - name: Restart nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted         
