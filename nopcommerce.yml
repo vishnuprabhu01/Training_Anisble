@@ -57,17 +57,16 @@
     - name: creating nopCommerce service
       ansible.builtin.copy:
         src: ./nopCommerce450.service
-        dest: etc/systemd/system/
-      notify:
-      - Restart nopCommerce
+        dest: /etc/systemd/system/
+    - name: nopcommerce restart
+      ansible.builtin.systemd:
+        state: started
+        name: nopCommerce450.service
+        daemon_reload: yes
   handlers:
     - name: Restart nginx
       ansible.builtin.service:
         name: nginx
         state: restarted
-    - name: Restart nopCommerce
-      ansible.builtin.service:
-        name: nopCommerce450.service
-        state: restarted
-          
+             
                   
